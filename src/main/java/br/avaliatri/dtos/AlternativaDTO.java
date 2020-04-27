@@ -1,6 +1,5 @@
 package br.avaliatri.dtos;
 
-import br.avaliatri.validators.AlternativaInsert;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;

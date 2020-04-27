@@ -21,19 +21,19 @@ public class ProvaInsertValidator implements ConstraintValidator<ProvaInsert, Pr
             if(!VALORES_ACEITOS.contains(questaoDTO.getAlternativa_correta())) {
                 list.add(new FieldMessage("questoes", "Valor para a alternativa incorreta"));
             }
-            if(questaoDTO.getAlternativaA().getTexto().equals("")) {
+            if(questaoDTO.getAlternativaA().equals("")) {
                 list.add(new FieldMessage("questoes", "Insira o valor para a alternativa A"));
             }
-            if(questaoDTO.getAlternativaB().getTexto().equals("")) {
+            if(questaoDTO.getAlternativaB().equals("")) {
                 list.add(new FieldMessage("questoes", "Insira o valor para a alternativa B"));
             }
-            if(questaoDTO.getAlternativaC().getTexto().equals("")) {
+            if(questaoDTO.getAlternativaC().equals("")) {
                 list.add(new FieldMessage("questoes", "Insira o valor para a alternativa C"));
             }
-            if(questaoDTO.getAlternativaD().getTexto().equals("")) {
+            if(questaoDTO.getAlternativaD().equals("")) {
                 list.add(new FieldMessage("questoes", "Insira o valor para a alternativa D"));
             }
-            if(questaoDTO.getAlternativaE().getTexto().equals("")) {
+            if(questaoDTO.getAlternativaE().equals("")) {
                 list.add(new FieldMessage("questoes", "Insira o valor para a alternativa E"));
             }
         }

@@ -37,15 +37,15 @@ public class QuestaoService {
         entity.setEnunciado(dto.getEnunciado());
         Alternativa a;
 
-        a = new Alternativa(dto.getAlternativaA().getAlternativa(), dto.getAlternativaA().getTexto());
+        a = new Alternativa("A", dto.getAlternativaA());
         alternativas.add(a);
-        a = new Alternativa(dto.getAlternativaB().getAlternativa(), dto.getAlternativaB().getTexto());
+        a = new Alternativa("B", dto.getAlternativaB());
         alternativas.add(a);
-        a = new Alternativa(dto.getAlternativaC().getAlternativa(), dto.getAlternativaC().getTexto());
+        a = new Alternativa("C", dto.getAlternativaC());
         alternativas.add(a);
-        a = new Alternativa(dto.getAlternativaD().getAlternativa(), dto.getAlternativaD().getTexto());
+        a = new Alternativa("D", dto.getAlternativaD());
         alternativas.add(a);
-        a = new Alternativa(dto.getAlternativaE().getAlternativa(), dto.getAlternativaE().getTexto());
+        a = new Alternativa("E", dto.getAlternativaE());
         alternativas.add(a);
 
         entity.setAlternativas(alternativas);
@@ -58,26 +58,26 @@ public class QuestaoService {
         dto.setEnunciado(entity.getEnunciado());
         dto.setId(entity.getId());
         dto.setProva(entity.getProva().getId());
-        AlternativaDTO alternativaValor;
+        String alternativaValor;
         for(Alternativa a: entity.getAlternativas()) {
             if(a.getOpcao().equalsIgnoreCase("A")){
-                alternativaValor = AlternativaService.convertEntityToDto(a);
+                alternativaValor = a.getTexto();
                 dto.setAlternativaA(alternativaValor);
             }
             if(a.getOpcao().equalsIgnoreCase("B")){
-                alternativaValor = AlternativaService.convertEntityToDto(a);
+                alternativaValor = a.getTexto();
                 dto.setAlternativaB(alternativaValor);
             }
             if(a.getOpcao().equalsIgnoreCase("C")){
-                alternativaValor = AlternativaService.convertEntityToDto(a);
+                alternativaValor = a.getTexto();
                 dto.setAlternativaC(alternativaValor);
             }
             if(a.getOpcao().equalsIgnoreCase("D")){
-                alternativaValor = AlternativaService.convertEntityToDto(a);
+                alternativaValor = a.getTexto();
                 dto.setAlternativaD(alternativaValor);
             }
             if(a.getOpcao().equalsIgnoreCase("E")){
-                alternativaValor = AlternativaService.convertEntityToDto(a);
+                alternativaValor = a.getTexto();
                 dto.setAlternativaE(alternativaValor);
             }
         }
@@ -104,11 +104,12 @@ public class QuestaoService {
         for(QuestaoDTO dto: dtos) {
             alternativas = new ArrayList<>();
             questao = convertDtoToEntity(dto);
-            alternativas.add(AlternativaService.convertDtoToEntity(dto.getAlternativaA()));
-            alternativas.add(AlternativaService.convertDtoToEntity(dto.getAlternativaB()));
-            alternativas.add(AlternativaService.convertDtoToEntity(dto.getAlternativaC()));
-            alternativas.add(AlternativaService.convertDtoToEntity(dto.getAlternativaD()));
-            alternativas.add(AlternativaService.convertDtoToEntity(dto.getAlternativaE()));
+            alternativas.add(new Alternativa("A", dto.getAlternativaA()));
+            alternativas.add(new Alternativa("B", dto.getAlternativaB()));
+            alternativas.add(new Alternativa("C", dto.getAlternativaC()));
+            alternativas.add(new Alternativa("D", dto.getAlternativaD()));
+            alternativas.add(new Alternativa("E", dto.getAlternativaE()));
+
             questao.setAlternativas(alternativas);
             entities.add(questao);
         }

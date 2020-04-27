@@ -1,13 +1,11 @@
 package br.avaliatri.dtos;
 
-
-import br.avaliatri.validators.AlternativaInsert;
 import br.avaliatri.validators.QuestaoInsert;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -18,19 +16,14 @@ public class QuestaoDTO implements Serializable {
 
     private Integer id;
     private Integer prova;
-
     private String Imagem = "";
-    private List<AlternativaDTO> alternativas = new ArrayList<>();
+    private List<AlternativaDTO> alternativas;
     @NotEmpty(message = "Enunciado obrigatorio") private String enunciado;
 
-    private String alternativa_correta = "A";
-    @AlternativaInsert private AlternativaDTO alternativaA;
-    @AlternativaInsert private AlternativaDTO alternativaB;
-    @AlternativaInsert private AlternativaDTO alternativaC;
-    @AlternativaInsert private AlternativaDTO alternativaD;
-    @AlternativaInsert private AlternativaDTO alternativaE;
-
-    private String created_at;
-    private String updated_at;
-    private String deleted_at;
+    @JsonIgnore private String alternativa_correta = "A";
+    private String alternativaA;
+    private String alternativaB;
+    private String alternativaC;
+    private String alternativaD;
+    private String alternativaE;
 }

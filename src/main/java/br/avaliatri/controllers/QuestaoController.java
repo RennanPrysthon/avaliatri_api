@@ -50,19 +50,19 @@ public class QuestaoController {
 
         for (Alternativa a: questao.getAlternativas()) {
             if(a.getOpcao().equalsIgnoreCase("A")){
-                a.setTexto(dtoNew.getAlternativaA().getTexto());
+                a.setTexto(dtoNew.getAlternativaA());
             }
             if(a.getOpcao().equalsIgnoreCase("B")){
-                a.setTexto(dtoNew.getAlternativaB().getTexto());
+                a.setTexto(dtoNew.getAlternativaB());
             }
             if(a.getOpcao().equalsIgnoreCase("C")){
-                a.setTexto(dtoNew.getAlternativaC().getTexto());
+                a.setTexto(dtoNew.getAlternativaC());
             }
             if(a.getOpcao().equalsIgnoreCase("D")){
-                a.setTexto(dtoNew.getAlternativaD().getTexto());
+                a.setTexto(dtoNew.getAlternativaD());
             }
             if(a.getOpcao().equalsIgnoreCase("E")){
-                a.setTexto(dtoNew.getAlternativaE().getTexto());
+                a.setTexto(dtoNew.getAlternativaE());
             }
         }
         this.alternativaService.updateAll(questao.getAlternativas());
