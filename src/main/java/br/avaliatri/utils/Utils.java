@@ -39,10 +39,6 @@ public class Utils {
 
         if(this.sdf == null)
             sdf = new SimpleDateFormat(PATTERN);
-
-        if(this.isToday(data))
-            return "Hoje";
-
         return sdf.format(data);
     }
 }

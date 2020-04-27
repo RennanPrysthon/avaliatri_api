@@ -1,21 +1,20 @@
 package br.avaliatri.dtos;
 
+import br.avaliatri.dtos.util.QuestaoRespondidaDTO;
 import lombok.Data;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
+import javax.validation.constraints.NotNull;
 import java.util.List;
+
 @Data
 public class ProvaRespondidaDTO {
     private Integer id;
-    private HashMap<Integer, AlternativaDTO> questoes_respondida = new HashMap<>();
-    private HashMap<Integer, AlternativaDTO> questoes_resultado = new HashMap<>();
-    private List<QuestaoDTO> questoes_finais = new ArrayList<>();
-    private Integer quantidade_questoes = 0;
     private String respondida_em;
-    private BigDecimal nota = BigDecimal.valueOf(0.0);
+
     private String observacao;
-    private Integer prova;
-    private Integer usuario;
+    @NotNull(message = "Insira o id do usuario")private Integer usuario;
+
+    private List<QuestaoRespondidaDTO> questoes_respondidas;
+    private Integer nota;
+    private Integer quantidade_questoes = 0;
+    private ProvaDTO prova;
 }

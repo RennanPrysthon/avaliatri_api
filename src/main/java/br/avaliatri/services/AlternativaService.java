@@ -44,11 +44,17 @@ public class AlternativaService {
 
     public static List<AlternativaDTO> convertEntityListToDtoList(List<Alternativa> entities) {
         List<AlternativaDTO> dtos = new ArrayList<>();
+        for(Alternativa entity: entities) {
+            dtos.add(convertEntityToDto(entity));
+        }
         return dtos;
     }
 
-    public static List<Alternativa> convertDtoToEntity(List<ProvaDTO> dtos){
+    public static List<Alternativa> convertDtoListToEntityList(List<AlternativaDTO> dtos){
         List<Alternativa> entities = new ArrayList<>();
+        for(AlternativaDTO dto: dtos) {
+            entities.add(convertDtoToEntity(dto));
+        }
         return entities;
     }
 

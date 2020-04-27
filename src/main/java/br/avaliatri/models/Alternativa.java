@@ -1,6 +1,5 @@
 package br.avaliatri.models;
 
-import br.avaliatri.dtos.util.AlternativaValor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -15,9 +14,11 @@ public class Alternativa {
     private Integer id;
 
     @ManyToOne
+    @JoinColumn(name = "imagem_id")
     private Imagem imagem;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "questao_id")
     private Questao questao;
     private String opcao;
     private String texto;
@@ -25,10 +26,5 @@ public class Alternativa {
     public Alternativa(String opcao, String texto) {
         this.opcao = opcao;
         this.texto = texto;
-    }
-
-    public Alternativa(AlternativaValor alternativa) {
-        this.opcao = alternativa.getAlternativa();
-        this.texto = alternativa.getValor();
     }
 }

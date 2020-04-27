@@ -2,7 +2,6 @@ package br.avaliatri.services;
 
 import br.avaliatri.dtos.AlternativaDTO;
 import br.avaliatri.dtos.QuestaoDTO;
-import br.avaliatri.dtos.util.AlternativaValor;
 import br.avaliatri.excecoes.Excecao;
 import br.avaliatri.models.Alternativa;
 import br.avaliatri.models.Prova;

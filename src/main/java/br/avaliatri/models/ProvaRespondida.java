@@ -3,24 +3,25 @@ package br.avaliatri.models;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Data
+@Entity
 public class ProvaRespondida {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private Integer qtd_questoes;
-    private Map<Integer, String> questoes_respondida = new HashMap<>();
-    private Map<Integer, String> questoes_resultado = new HashMap<>();
+    private Integer nota;
+
+    @OneToMany
+    private List<QuestaoRespondida> questoes;
     private Date respondida_em;
-    private BigDecimal nota;
     private String observacao;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "prova_id")
     private Prova prova;
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "usuario_id")
     private Usuario usuario;
 }

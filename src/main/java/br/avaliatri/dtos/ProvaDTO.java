@@ -1,5 +1,6 @@
 package br.avaliatri.dtos;
 
+import br.avaliatri.dtos.util.QuestaoRespondidaDTO;
 import br.avaliatri.validators.ProvaInsert;
 import br.avaliatri.validators.QuestaoInsert;
 import com.fasterxml.jackson.annotation.JsonInclude;

@@ -18,6 +18,7 @@ public class Prova {
     private Boolean is_published = false;
     private Boolean is_activated = true;
     @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "usuario_id")
     private Usuario usuario;
 
     @OneToMany(mappedBy = "prova", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)

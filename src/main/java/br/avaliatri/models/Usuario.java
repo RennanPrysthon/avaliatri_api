@@ -24,7 +24,7 @@ public class Usuario {
     @OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY)
     private List<Prova> provas_criadas;
     @OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    private List<Prova> provas_respondidas;
+    private List<ProvaRespondida> provas_respondidas;
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable
     private Set<Integer> perfis = new HashSet<>();
