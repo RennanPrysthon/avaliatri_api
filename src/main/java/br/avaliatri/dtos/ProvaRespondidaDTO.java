@@ -10,13 +10,13 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ProvaRespondidaDTO {
     private Integer id;
+    @NotNull(message = "Insira o id do usuario") private Integer usuario;
     private String respondida_em;
 
     private String observacao;
-    @NotNull(message = "Insira o id do usuario")private Integer usuario;
-
     private List<QuestaoRespondidaDTO> questoes_respondidas;
     private Integer nota;
     private Integer quantidade_questoes = 0;
+    private String titulo;
     private ProvaDTO prova;
 }

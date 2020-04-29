@@ -52,9 +52,8 @@ public class ProvaRespondidaService {
         ProvaRespondidaDTO dto;
         for(ProvaRespondida entity: entities) {
             dto = ProvaRespondidaService.convertEntityToDto(entity);
-            for(QuestaoRespondidaDTO q: dto.getQuestoes_respondidas()) {
-                q.setAlternativas(null);
-            }
+            dto.setQuestoes_respondidas(null);
+            dto.setTitulo(entity.getProva().getTitle());
             dtos.add(dto);
         }
         return dtos;
