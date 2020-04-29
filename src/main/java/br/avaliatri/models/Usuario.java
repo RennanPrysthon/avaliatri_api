@@ -1,7 +1,6 @@
 package br.avaliatri.models;
 
-import br.avaliatri.models.enums.Perfil;
-import io.swagger.models.auth.In;
+import br.avaliatri.enums.Perfil;
 import lombok.Data;
 
 import javax.persistence.*;

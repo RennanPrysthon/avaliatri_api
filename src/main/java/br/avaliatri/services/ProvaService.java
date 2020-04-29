@@ -1,16 +1,14 @@
 package br.avaliatri.services;
 
 import br.avaliatri.dtos.ProvaDTO;
+import br.avaliatri.enums.StatusProva;
 import br.avaliatri.excecoes.Excecao;
-import br.avaliatri.models.Alternativa;
-import br.avaliatri.models.Prova;
-import br.avaliatri.models.Questao;
-import br.avaliatri.models.Usuario;
-import br.avaliatri.repositories.AlternativaRepository;
-import br.avaliatri.repositories.ProvaRepository;
-import br.avaliatri.repositories.QuestaoRepository;
-import br.avaliatri.repositories.UsuarioRepository;
+import br.avaliatri.models.*;
+import br.avaliatri.repositories.*;
 import br.avaliatri.utils.Utils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,12 +22,14 @@ public class ProvaService {
     private UsuarioRepository usuarioRepository;
     private QuestaoRepository questaoRepository;
     private AlternativaRepository alternativaRepository;
+    private ProvaRespondidaRepository respondidaRepository;
 
-    public ProvaService(ProvaRepository repository, UsuarioRepository usuarioRepository, QuestaoRepository questaoRepository, AlternativaRepository alternativaRepository) {
+    public ProvaService(ProvaRepository repository, UsuarioRepository usuarioRepository, QuestaoRepository questaoRepository, AlternativaRepository alternativaRepository, ProvaRespondidaRepository respondidaRepository) {
         this.repository = repository;
         this.usuarioRepository = usuarioRepository;
         this.questaoRepository = questaoRepository;
         this.alternativaRepository = alternativaRepository;
+        this.respondidaRepository = respondidaRepository;
     }
 
     @Transactional
@@ -158,7 +158,26 @@ public class ProvaService {
         return p;
     }
 
-    public List<Prova> findAllForUser(Usuario entitiy) {
-        return this.repository.findAll();
+    public Page<ProvaDTO> findAllForUser(Usuario entitiy, Integer page, Integer linesPerPage, String orderBy, String direction) {
+        PageRequest pageRequest = PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy);
+
+        return this.repository.findAll(pageRequest).map(p -> {
+            Optional<ProvaRespondida> provaRespondida = this.respondidaRepository.findByUsuarioAndProva(entitiy, p);
+            ProvaDTO provaDTO = new ProvaDTO();
+            provaDTO.setId(p.getId());
+            provaDTO.setTitle(p.getTitle());
+            provaDTO.setCreated_at(Utils.getInstancia().getDataFormatada(p.getCreated_at()));
+            provaDTO.setDescription(p.getDescription());
+            provaDTO.setQtd_questoes(p.getQuestoes().size());
+
+            if(provaRespondida.isPresent()) {
+                provaDTO.setPontuacao(provaRespondida.get().getNota());
+                provaDTO.setStatusProva(StatusProva.FEITA);
+            } else {
+                provaDTO.setStatusProva(StatusProva.NAO_FEITA);
+            }
+
+            return provaDTO;
+        });
     }
 }

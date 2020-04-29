@@ -4,7 +4,7 @@ import br.avaliatri.models.Alternativa;
 import br.avaliatri.models.Prova;
 import br.avaliatri.models.Questao;
 import br.avaliatri.models.Usuario;
-import br.avaliatri.models.enums.Perfil;
+import br.avaliatri.enums.Perfil;
 import br.avaliatri.repositories.AlternativaRepository;
 import br.avaliatri.repositories.ProvaRepository;
 import br.avaliatri.repositories.QuestaoRepository;

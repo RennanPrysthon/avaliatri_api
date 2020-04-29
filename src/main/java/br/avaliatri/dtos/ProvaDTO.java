@@ -1,6 +1,7 @@
 package br.avaliatri.dtos;
 
 import br.avaliatri.dtos.util.QuestaoRespondidaDTO;
+import br.avaliatri.enums.StatusProva;
 import br.avaliatri.validators.ProvaInsert;
 import br.avaliatri.validators.QuestaoInsert;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -17,6 +18,8 @@ public class ProvaDTO {
     private List<QuestaoDTO> questoes = new ArrayList<>();
     private Integer qtd_questoes = 0;
     private Integer usuario;
+    private StatusProva statusProva;
+    private Integer pontuacao;
     private String criado_por;
     private String title;
     private String description;

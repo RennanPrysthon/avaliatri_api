@@ -1,4 +1,4 @@
-package br.avaliatri.models.enums;
+package br.avaliatri.enums;
 
 public enum Perfil {
     ALUNO(1, "Aluno"),

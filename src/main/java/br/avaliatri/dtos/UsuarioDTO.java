@@ -1,7 +1,6 @@
 package br.avaliatri.dtos;
 
-import br.avaliatri.models.enums.Perfil;
-import br.avaliatri.validators.SenhaInsert;
+import br.avaliatri.enums.Perfil;
 import br.avaliatri.validators.UsuarioInsert;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -10,7 +9,6 @@ import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 

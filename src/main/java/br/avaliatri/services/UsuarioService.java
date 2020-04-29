@@ -3,7 +3,7 @@ package br.avaliatri.services;
 import br.avaliatri.dtos.UsuarioDTO;
 import br.avaliatri.excecoes.Excecao;
 import br.avaliatri.models.Usuario;
-import br.avaliatri.models.enums.Perfil;
+import br.avaliatri.enums.Perfil;
 import br.avaliatri.repositories.UsuarioRepository;
 import br.avaliatri.utils.Utils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

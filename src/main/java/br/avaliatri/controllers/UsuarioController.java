@@ -8,6 +8,7 @@ import br.avaliatri.models.Usuario;
 import br.avaliatri.services.ProvaService;
 import br.avaliatri.services.UsuarioService;
 import br.avaliatri.utils.Utils;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -43,11 +44,16 @@ public class UsuarioController {
     }
 
     @GetMapping("/{id}/provas")
-    public ResponseEntity<List<ProvaDTO>> getAllProvasUser(@PathVariable("id") Integer id) throws Excecao {
+    public ResponseEntity<Page<ProvaDTO>> getAllProvasUser(
+            @PathVariable("id") Integer id,
+            @RequestParam(value="page", defaultValue ="0") Integer page,
+            @RequestParam(value="linesPerPage", defaultValue ="4")Integer linesPerPage,
+            @RequestParam(value="orderBy", defaultValue ="id")String orderBy,
+            @RequestParam(value="direction", defaultValue = "DESC")String direction
+    )throws Excecao {
         Usuario entitiy = this.service.findById(id);
 
-        List<Prova> entities = this.provaService.findAllForUser(entitiy);
-        List<ProvaDTO> provas = ProvaService.convertEntityListToDtoList(entities);
+        Page<ProvaDTO> provas = this.provaService.findAllForUser(entitiy, page, linesPerPage, orderBy, direction);
         return ResponseEntity.ok().body(provas);
     }
 
