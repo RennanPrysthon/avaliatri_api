@@ -1,13 +1,11 @@
 package br.avaliatri.services;
 
+import br.avaliatri.dtos.ProvaDTO;
 import br.avaliatri.dtos.ProvaRespondidaDTO;
 import br.avaliatri.dtos.ResultadoDTO;
 import br.avaliatri.dtos.util.QuestaoRespondidaDTO;
 import br.avaliatri.excecoes.Excecao;
-import br.avaliatri.models.Prova;
-import br.avaliatri.models.ProvaRespondida;
-import br.avaliatri.models.QuestaoRespondida;
-import br.avaliatri.models.Usuario;
+import br.avaliatri.models.*;
 import br.avaliatri.repositories.ProvaRespondidaRepository;
 import br.avaliatri.utils.Utils;
 import org.springframework.stereotype.Service;
@@ -54,9 +52,9 @@ public class ProvaRespondidaService {
         ProvaRespondidaDTO dto;
         for(ProvaRespondida entity: entities) {
             dto = ProvaRespondidaService.convertEntityToDto(entity);
-            dto.setQuestoes_respondidas(null);
-            dto.setProva(null);
-
+            for(QuestaoRespondidaDTO q: dto.getQuestoes_respondidas()) {
+                q.setAlternativas(null);
+            }
             dtos.add(dto);
         }
         return dtos;
@@ -78,9 +76,9 @@ public class ProvaRespondidaService {
                     qn.setAlternativa_usuario(q.getAlternativa_usuario());
                     qn.setIs_correta(q.getIs_correta());
                     qn.setQuestao(q.getQuestao().getId());
+                    qn.setAlternativas(AlternativaService.convertEntityListToDtoList(q.getQuestao().getAlternativas()));
                     return qn;
                 }).collect(Collectors.toList()));
-        dto.setProva(ProvaService.convertEntityToDto(provaRespondida.getProva()));
         return dto;
     }
 
