@@ -47,7 +47,7 @@ public class UsuarioService {
         dto.setName(entity.getName());
         dto.setId(entity.getId());
         dto.setQtd_provas_criadas(entity.getProvas_criadas().size() == 0?null:entity.getProvas_criadas().size());
-        dto.setPerfil(entity.getPerfis().stream().map(p -> Perfil.toEnum(p).getRole()).collect(Collectors.toList()));
+        dto.setPerfil(entity.getPerfis().stream().map(p -> p.getRole()).collect(Collectors.toList()));
         return dto;
     }
 

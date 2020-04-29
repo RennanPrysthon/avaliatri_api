@@ -1,14 +1,19 @@
 package br.avaliatri.models;
 
 import br.avaliatri.enums.Perfil;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Entity
 @Data
-public class Usuario {
+public class Usuario implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -26,8 +31,50 @@ public class Usuario {
     private List<ProvaRespondida> provas_respondidas;
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable
-    private Set<Integer> perfis = new HashSet<>();
+    private Set<Perfil> perfis = new HashSet<>();
     public void addPerfil(Perfil p) {
-        this.perfis.add(p.getCod());
+        this.perfis.add(p);
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return perfis.stream().map(x -> new SimpleGrantedAuthority(x.getRole())).collect(Collectors.toList());
+    }
+
+    @Override
+    @JsonIgnore
+    public String getUsername() {
+        return this.email;
+    }
+
+    @Override
+    @JsonIgnore
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    @JsonIgnore
+    public String getPassword() {
+        return this.password;
+    }
+
+
+    @Override
+    @JsonIgnore
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    @JsonIgnore
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    @JsonIgnore
+    public boolean isEnabled() {
+        return is_active;
     }
 }

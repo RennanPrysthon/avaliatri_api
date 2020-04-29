@@ -175,6 +175,7 @@ public class ProvaService {
                 provaDTO.setStatusProva(StatusProva.FEITA);
             } else {
                 provaDTO.setStatusProva(StatusProva.NAO_FEITA);
+                provaDTO.setIs_activated(p.getIs_activated());
             }
 
             return provaDTO;
