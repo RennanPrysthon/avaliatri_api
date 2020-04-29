@@ -39,6 +39,10 @@ public class AlternativaService {
         dto.setAlternativa(entity.getOpcao());
         dto.setId(entity.getId());
         dto.setQuestao(entity.getQuestao().getId());
+        if(entity.getTemImagem()) {
+            dto.setImagem(entity.getImagem().getCaminhoArquivo());
+        }
+        dto.setTemImagem(entity.getTemImagem());
         return dto;
     }
 

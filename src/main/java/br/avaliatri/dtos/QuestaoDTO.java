@@ -17,6 +17,7 @@ public class QuestaoDTO implements Serializable {
     private Integer id;
     private Integer prova;
     private String Imagem = "";
+    private Boolean temImagem = false;
     private List<AlternativaDTO> alternativas;
     @NotEmpty(message = "Enunciado obrigatorio") private String enunciado;
 

@@ -10,6 +10,7 @@ import javax.validation.constraints.NotNull;
 public class AlternativaDTO {
     private Integer id;
     private String Imagem;
+    private Boolean temImagem = false;
     @NotNull(message = "Insira o id da questao")
     private Integer questao;
     private String alternativa;

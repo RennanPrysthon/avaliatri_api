@@ -13,9 +13,10 @@ public class Alternativa {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "imagem_id")
     private Imagem imagem;
+    private Boolean temImagem;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "questao_id")

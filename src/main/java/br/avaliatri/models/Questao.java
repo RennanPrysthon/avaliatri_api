@@ -15,9 +15,10 @@ public class Questao {
     private Integer id;
     private String enunciado;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name ="iamgem_id")
     private Imagem imagem;
+    private Boolean temImagem = false;
 
     @OneToMany(mappedBy = "questao", cascade = CascadeType.REMOVE)
     private List<Alternativa> alternativas = new ArrayList<>();

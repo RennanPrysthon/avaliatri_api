@@ -91,6 +91,7 @@ public class ProvaController {
         }
 
         Questao q = QuestaoService.convertDtoToEntity(dto);
+        q.setTemImagem(false);
         p = this.service.addQuestao(p, q);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(ProvaService.convertEntityToDto(p));

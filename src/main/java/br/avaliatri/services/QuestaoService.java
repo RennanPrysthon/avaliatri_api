@@ -58,6 +58,10 @@ public class QuestaoService {
         dto.setEnunciado(entity.getEnunciado());
         dto.setId(entity.getId());
         dto.setProva(entity.getProva().getId());
+        if(entity.getTemImagem()) {
+            dto.setImagem(entity.getImagem().getCaminhoArquivo());
+        }
+        dto.setTemImagem(entity.getTemImagem());
         String alternativaValor;
         for(Alternativa a: entity.getAlternativas()) {
             if(a.getOpcao().equalsIgnoreCase("A")){

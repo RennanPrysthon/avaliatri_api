@@ -102,6 +102,7 @@ public class DatabaseInstantiate {
             questao.setAlternativa_correta("A");
             questao = questaoRepository.save(questao);
             questao.setAlternativas(adicinarAlternativas(i, questao));
+            questao.setTemImagem(false);
             questoes.add(questao);
         }
         questaoRepository.saveAll(questoes);
@@ -117,6 +118,7 @@ public class DatabaseInstantiate {
             a.setTexto("Alternativa " + (i+1) + " da questao " + c);
             a.setOpcao(String.valueOf(opcoes.charAt(i)));
             a.setQuestao(q);
+            a.setTemImagem(false);
             alternativas.add(a);
         }
         alternativaRepository.saveAll(alternativas);
