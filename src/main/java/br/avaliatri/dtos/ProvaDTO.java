@@ -15,6 +15,7 @@ import java.util.List;
 @ProvaInsert
 public class ProvaDTO {
     private Integer id;
+    private Integer resultado_id;
     private List<QuestaoDTO> questoes = new ArrayList<>();
     private Integer qtd_questoes = 0;
     private Integer usuario;

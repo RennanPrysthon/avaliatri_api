@@ -172,6 +172,7 @@ public class ProvaService {
 
             if(provaRespondida.isPresent()) {
                 provaDTO.setPontuacao(provaRespondida.get().getNota());
+                provaDTO.setResultado_id(provaRespondida.get().getId());
                 provaDTO.setStatusProva(StatusProva.FEITA);
             } else {
                 provaDTO.setStatusProva(StatusProva.NAO_FEITA);
