@@ -1,10 +1,13 @@
 package br.avaliatri.controllers;
 
 import br.avaliatri.dtos.ProvaDTO;
+import br.avaliatri.dtos.ProvaRespondidaDTO;
+import br.avaliatri.dtos.ResultadoDTO;
 import br.avaliatri.dtos.UsuarioDTO;
 import br.avaliatri.excecoes.Excecao;
 import br.avaliatri.models.Prova;
 import br.avaliatri.models.Usuario;
+import br.avaliatri.services.ProvaRespondidaService;
 import br.avaliatri.services.ProvaService;
 import br.avaliatri.services.UsuarioService;
 import br.avaliatri.utils.Utils;
@@ -21,10 +24,12 @@ import java.util.List;
 public class UsuarioController {
     private UsuarioService service;
     private ProvaService provaService;
+    private ProvaRespondidaService provaRespondidaService;
 
-    public UsuarioController(UsuarioService service, ProvaService provaService) {
+    public UsuarioController(UsuarioService service, ProvaService provaService, ProvaRespondidaService provaRespondidaService) {
         this.service = service;
         this.provaService = provaService;
+        this.provaRespondidaService = provaRespondidaService;
     }
 
     @GetMapping("")
@@ -56,6 +61,30 @@ public class UsuarioController {
         Page<ProvaDTO> provas = this.provaService.findAllForUser(entitiy, page, linesPerPage, orderBy, direction);
         return ResponseEntity.ok().body(provas);
     }
+
+    @GetMapping("/{id}/resultados")
+    public ResponseEntity<ResultadoDTO> getAllResultadosByUser(@PathVariable("id") Integer id)
+    throws Excecao {
+        Usuario entitiy = this.service.findById(id);
+        ResultadoDTO resultadoDTO = provaRespondidaService.getAllResultados(entitiy);
+        return ResponseEntity.ok().body(resultadoDTO);
+    }
+
+    @GetMapping("/{id}/resultados/{id_resultado}")
+    public ResponseEntity<ProvaRespondidaDTO> getResultadoById(
+            @PathVariable("id") Integer id,
+            @PathVariable("id_resultado") Integer id_resultado
+    ) throws Excecao {
+        Usuario entitiy = this.service.findById(id);
+        ProvaRespondidaDTO resultadoDTO = provaRespondidaService.getResultadoById(id_resultado);
+
+        if(entitiy.getId() == resultadoDTO.getUsuario()) {
+            return ResponseEntity.ok().body(resultadoDTO);
+        }
+
+        return ResponseEntity.ok().body(resultadoDTO);
+    }
+
 
     @PostMapping("")
     public ResponseEntity<UsuarioDTO> saveUser(@Valid @RequestBody UsuarioDTO dto) {

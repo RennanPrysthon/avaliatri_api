@@ -1,11 +1,13 @@
 package br.avaliatri.dtos;
 
 import br.avaliatri.dtos.util.QuestaoRespondidaDTO;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ProvaRespondidaDTO {
     private Integer id;
     private String respondida_em;

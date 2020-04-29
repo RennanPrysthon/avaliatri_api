@@ -1,5 +1,6 @@
 package br.avaliatri.services;
 
+import br.avaliatri.dtos.ResultadoDTO;
 import br.avaliatri.dtos.UsuarioDTO;
 import br.avaliatri.excecoes.Excecao;
 import br.avaliatri.models.Usuario;
