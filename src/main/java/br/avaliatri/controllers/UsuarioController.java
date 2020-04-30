@@ -4,6 +4,7 @@ import br.avaliatri.dtos.ProvaDTO;
 import br.avaliatri.dtos.ProvaRespondidaDTO;
 import br.avaliatri.dtos.ResultadoDTO;
 import br.avaliatri.dtos.UsuarioDTO;
+import br.avaliatri.dtos.util.QuestaoRespondidaDTO;
 import br.avaliatri.excecoes.Excecao;
 import br.avaliatri.models.Prova;
 import br.avaliatri.models.Usuario;
@@ -71,18 +72,15 @@ public class UsuarioController {
     }
 
     @GetMapping("/{id}/resultados/{id_resultado}")
-    public ResponseEntity<ProvaRespondidaDTO> getResultadoById(
+    public ResponseEntity<List<QuestaoRespondidaDTO>> getResultadoById(
             @PathVariable("id") Integer id,
             @PathVariable("id_resultado") Integer id_resultado
     ) throws Excecao {
         Usuario entitiy = this.service.findById(id);
         ProvaRespondidaDTO resultadoDTO = provaRespondidaService.getResultadoById(id_resultado);
+        List<QuestaoRespondidaDTO> dtos = resultadoDTO.getQuestoes_respondidas();
 
-        if(entitiy.getId() == resultadoDTO.getUsuario()) {
-            return ResponseEntity.ok().body(resultadoDTO);
-        }
-
-        return ResponseEntity.ok().body(resultadoDTO);
+        return ResponseEntity.ok().body(dtos);
     }
 
 

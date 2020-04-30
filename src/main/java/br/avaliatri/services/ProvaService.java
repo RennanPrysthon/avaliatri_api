@@ -75,7 +75,7 @@ public class ProvaService {
         return convertEntityListToDtoList(provas);
     }
 
-    public Prova findById(Integer id) throws Exception {
+    public Prova findById(Integer id) throws Excecao {
         return this.repository.findById(id)
                 .orElseThrow(()-> new Excecao("Prova com id " + id + " nao foi encontrada", HttpStatus.NOT_FOUND));
     }

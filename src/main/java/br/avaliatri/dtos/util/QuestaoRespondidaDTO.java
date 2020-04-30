@@ -16,6 +16,7 @@ public class QuestaoRespondidaDTO {
     @NotNull(message = "Insira a alternativa") private String alternativa_usuario;
     private List<AlternativaDTO> alternativas;
     private Boolean is_correta;
+    private String enunciado;
 
     public QuestaoRespondidaDTO() {
 

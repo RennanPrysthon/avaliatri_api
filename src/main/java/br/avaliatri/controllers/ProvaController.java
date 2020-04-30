@@ -107,6 +107,9 @@ public class ProvaController {
         verifyErrors(result);
         Prova p;
         Usuario u;
+
+        this.provaRespondidaService.verificarSeExisteResultado(id, dto.getUsuario());
+
         List<QuestaoRespondidaDTO> questaoRespondidaDTOS;
         List<Questao> questoes;
         List<QuestaoRespondida> resultado = new ArrayList<>();

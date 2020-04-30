@@ -1,6 +1,5 @@
 package br.avaliatri.services;
 
-import br.avaliatri.dtos.ProvaDTO;
 import br.avaliatri.dtos.ProvaRespondidaDTO;
 import br.avaliatri.dtos.ResultadoDTO;
 import br.avaliatri.dtos.util.QuestaoRespondidaDTO;
@@ -12,17 +11,21 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class ProvaRespondidaService {
 
     private ProvaRespondidaRepository repository;
+    private UsuarioService usuarioService;
+    private ProvaService provaService;
 
-    public ProvaRespondidaService(ProvaRespondidaRepository repository) {
+    public ProvaRespondidaService(ProvaRespondidaRepository repository, UsuarioService usuarioService, ProvaService provaService) {
         this.repository = repository;
+        this.usuarioService = usuarioService;
+        this.provaService = provaService;
     }
-
 
     public ProvaRespondida save(ProvaRespondida provaRespondida) {
         return this.repository.save(provaRespondida);
@@ -39,7 +42,6 @@ public class ProvaRespondidaService {
         resultadoDTO.setUser_email(entitiy.getEmail());
         return resultadoDTO;
     }
-
 
     public ProvaRespondidaDTO getResultadoById(Integer id_resultado) throws Excecao {
         ProvaRespondida provaRespondida = this.repository.findById(id_resultado)
@@ -72,6 +74,7 @@ public class ProvaRespondidaService {
                 .stream()
                 .map(q-> {
                     QuestaoRespondidaDTO qn = new QuestaoRespondidaDTO();
+                    qn.setEnunciado(q.getQuestao().getEnunciado());
                     qn.setAlternativa_usuario(q.getAlternativa_usuario());
                     qn.setIs_correta(q.getIs_correta());
                     qn.setQuestao(q.getQuestao().getId());
@@ -81,4 +84,13 @@ public class ProvaRespondidaService {
         return dto;
     }
 
+    public void verificarSeExisteResultado(Integer prova_id, Integer user_id) throws Excecao {
+        Usuario usuario = this.usuarioService.findById(user_id);
+        Prova prova = this.provaService.findById(prova_id);
+        Optional<ProvaRespondida> provaRespondida = this.repository.findByUsuarioAndProva(usuario, prova);
+
+        if (provaRespondida.isPresent()){
+            throw new Excecao("Prova ja foi respondida");
+        }
+    }
 }
