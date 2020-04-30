@@ -174,6 +174,7 @@ public class ProvaService {
                 provaDTO.setPontuacao(provaRespondida.get().getNota());
                 provaDTO.setResultado_id(provaRespondida.get().getId());
                 provaDTO.setStatusProva(StatusProva.FEITA);
+                provaDTO.setResultado_id(provaRespondida.get().getId());
             } else {
                 provaDTO.setStatusProva(StatusProva.NAO_FEITA);
                 provaDTO.setIs_activated(p.getIs_activated());
