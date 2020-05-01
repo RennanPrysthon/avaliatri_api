@@ -51,12 +51,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        http.cors().and().csrf().disable();
 
         if(Arrays.asList(env.getActiveProfiles()).contains("test")) {
             http.headers().frameOptions().disable();
             http.authorizeRequests().antMatchers("/*").permitAll();
         } else {
-            http.cors().and().csrf().disable();
             http.authorizeRequests()
                     .antMatchers( HttpMethod.GET, PUBLIC_MATCHES_GET).permitAll()
                     .antMatchers( HttpMethod.POST, PUBLIC_MATCHES_POST).permitAll()
