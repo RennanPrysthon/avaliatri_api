@@ -42,8 +42,8 @@ public class DatabaseInstantiate {
         logger.log(Level.INFO, "Instanciando base generica");
         Usuario usuario = new Usuario();
         usuario.setName("Rennan Prysthon");
-        usuario.setEmail("rennandelcastillo@gmail.com");
-        usuario.setPassword(pe.encode("1234"));
+        usuario.setEmail("admin");
+        usuario.setPassword(pe.encode("admin"));
         usuario.setCreated_at(
                 Utils.getInstancia().getDataAtual()
         );

@@ -6,7 +6,6 @@ import br.avaliatri.dtos.ResultadoDTO;
 import br.avaliatri.dtos.UsuarioDTO;
 import br.avaliatri.dtos.util.QuestaoRespondidaDTO;
 import br.avaliatri.excecoes.Excecao;
-import br.avaliatri.models.Prova;
 import br.avaliatri.models.Usuario;
 import br.avaliatri.services.ProvaRespondidaService;
 import br.avaliatri.services.ProvaService;
@@ -33,13 +32,43 @@ public class UsuarioController {
         this.provaRespondidaService = provaRespondidaService;
     }
 
-    @GetMapping("")
-    public ResponseEntity<List<UsuarioDTO>> getAllUsers() {
-        List<Usuario> entities = this.service.findAll();
-        List<UsuarioDTO> usuarios = UsuarioService.convertEntityListToDtoList(entities);
+    @GetMapping("/alunos")
+    public ResponseEntity<Page<UsuarioDTO>> getAllAlunos(
+        @RequestParam(value="page", defaultValue ="0") Integer page,
+        @RequestParam(value="linesPerPage", defaultValue ="4")Integer linesPerPage,
+        @RequestParam(value="orderBy", defaultValue ="id")String orderBy,
+        @RequestParam(value="direction", defaultValue = "DESC")String direction
+    ) {
+        Page<UsuarioDTO> usuarios = this.service.findAllAlunos(page, linesPerPage, orderBy, direction);
 
         return ResponseEntity.ok().body(usuarios);
     }
+
+    @GetMapping("/professores")
+    public ResponseEntity<Page<UsuarioDTO>> getAllProfessores(
+        @RequestParam(value="page", defaultValue ="0") Integer page,
+        @RequestParam(value="linesPerPage", defaultValue ="4")Integer linesPerPage,
+        @RequestParam(value="orderBy", defaultValue ="id")String orderBy,
+        @RequestParam(value="direction", defaultValue = "DESC")String direction
+    ) {
+        Page<UsuarioDTO> usuarios = this.service.findAllProfessores(page, linesPerPage, orderBy, direction);
+
+        return ResponseEntity.ok().body(usuarios);
+    }
+
+    @GetMapping("/professores/{id}/resultados")
+    public ResponseEntity<Page<ProvaRespondidaDTO>> getAllResultadosByProfessores(
+            @PathVariable("id") Integer id,
+            @RequestParam(value="page", defaultValue ="0") Integer page,
+            @RequestParam(value="linesPerPage", defaultValue ="4")Integer linesPerPage,
+            @RequestParam(value="orderBy", defaultValue ="id")String orderBy,
+            @RequestParam(value="direction", defaultValue = "DESC")String direction
+    ) throws Excecao {
+        Page<ProvaRespondidaDTO> respondidaDTOS = this.service.findAllResultadosByProfessores(id, page, linesPerPage, orderBy, direction);
+
+        return ResponseEntity.ok().body(respondidaDTOS);
+    }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<UsuarioDTO> getUserById(@PathVariable("id") Integer id) throws Excecao {
@@ -82,7 +111,6 @@ public class UsuarioController {
 
         return ResponseEntity.ok().body(dtos);
     }
-
 
     @PostMapping("")
     public ResponseEntity<UsuarioDTO> saveUser(@Valid @RequestBody UsuarioDTO dto) {

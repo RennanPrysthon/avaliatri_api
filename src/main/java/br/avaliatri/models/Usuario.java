@@ -29,16 +29,15 @@ public class Usuario implements UserDetails {
     private List<Prova> provas_criadas;
     @OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<ProvaRespondida> provas_respondidas;
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable
-    private Set<Perfil> perfis = new HashSet<>();
+
+    private Perfil perfil;
     public void addPerfil(Perfil p) {
-        this.perfis.add(p);
+        this.perfil = (p);
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return perfis.stream().map(x -> new SimpleGrantedAuthority(x.getRole())).collect(Collectors.toList());
+        return Collections.singletonList(new SimpleGrantedAuthority(perfil.getRole()));
     }
 
     @Override

@@ -70,9 +70,19 @@ public class ProvaService {
         return this.repository.save(p);
     }
 
-    public List<ProvaDTO> findAll() {
-        List<Prova> provas = this.repository.findAll();
-        return convertEntityListToDtoList(provas);
+    public Page<ProvaDTO> findAll(Integer page, Integer linesPerPage, String orderBy, String direction) {
+        PageRequest pageRequest = PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy);
+
+        return this.repository.findAll(pageRequest).map(prova -> {
+            ProvaDTO provaDTO = new ProvaDTO();
+            provaDTO.setId(prova.getId());
+            provaDTO.setTitle(prova.getTitle());
+            provaDTO.setCreated_at(Utils.getInstancia().getDataFormatada(prova.getCreated_at()));
+            provaDTO.setIs_activated(prova.getIs_activated());
+            provaDTO.setCriado_por(prova.getUsuario().getName());
+            provaDTO.setQtd_questoes(prova.getQuestoes().size());
+            return provaDTO;
+        });
     }
 
     public Prova findById(Integer id) throws Excecao {

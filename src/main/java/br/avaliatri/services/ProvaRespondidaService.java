@@ -49,7 +49,7 @@ public class ProvaRespondidaService {
         return convertEntityToDto(provaRespondida);
     }
 
-    private static List<ProvaRespondidaDTO> convertEntityListToDtoList(List<ProvaRespondida> entities) {
+    public static List<ProvaRespondidaDTO> convertEntityListToDtoList(List<ProvaRespondida> entities) {
         List<ProvaRespondidaDTO> dtos = new ArrayList<>();
         ProvaRespondidaDTO dto;
         for(ProvaRespondida entity: entities) {

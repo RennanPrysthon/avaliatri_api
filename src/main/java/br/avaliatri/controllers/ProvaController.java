@@ -13,7 +13,7 @@ import br.avaliatri.repositories.QuestaoRespondidaRepository;
 import br.avaliatri.services.*;
 import br.avaliatri.utils.Utils;
 import lombok.Synchronized;
-import org.hibernate.annotations.Synchronize;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -48,8 +48,14 @@ public class ProvaController {
     }
 
     @GetMapping("")
-    public ResponseEntity<List<ProvaDTO>> getAll() {
-        List<ProvaDTO> provas = this.service.findAll();
+    public ResponseEntity<Page<ProvaDTO>> getAll(
+            @RequestParam(value="page", defaultValue ="0") Integer page,
+            @RequestParam(value="linesPerPage", defaultValue ="4")Integer linesPerPage,
+            @RequestParam(value="orderBy", defaultValue ="id")String orderBy,
+            @RequestParam(value="direction", defaultValue = "DESC")String direction
+    ) {
+        Page<ProvaDTO> provas = this.service.findAll(page, linesPerPage, orderBy, direction);
+
         return ResponseEntity.ok().body(provas);
     }
 

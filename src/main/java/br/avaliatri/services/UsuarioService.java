@@ -1,27 +1,36 @@
 package br.avaliatri.services;
 
-import br.avaliatri.dtos.ResultadoDTO;
+import br.avaliatri.dtos.ProvaRespondidaDTO;
 import br.avaliatri.dtos.UsuarioDTO;
 import br.avaliatri.excecoes.Excecao;
+import br.avaliatri.models.Prova;
+import br.avaliatri.models.ProvaRespondida;
 import br.avaliatri.models.Usuario;
 import br.avaliatri.enums.Perfil;
+import br.avaliatri.repositories.ProvaRespondidaRepository;
 import br.avaliatri.repositories.UsuarioRepository;
 import br.avaliatri.utils.Utils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class UsuarioService {
     private BCryptPasswordEncoder pe;
     private UsuarioRepository repository;
+    private ProvaRespondidaRepository provaRespondidaRepository;
 
-    public UsuarioService(BCryptPasswordEncoder pe, UsuarioRepository repository) {
+    public UsuarioService(BCryptPasswordEncoder pe, UsuarioRepository repository, ProvaRespondidaRepository provaRespondidaRepository) {
         this.pe = pe;
         this.repository = repository;
+        this.provaRespondidaRepository = provaRespondidaRepository;
     }
 
     public Usuario save(Usuario e) {
@@ -48,7 +57,7 @@ public class UsuarioService {
         dto.setName(entity.getName());
         dto.setId(entity.getId());
         dto.setQtd_provas_criadas(entity.getProvas_criadas().size() == 0?null:entity.getProvas_criadas().size());
-        dto.setPerfil(entity.getPerfis().stream().map(p -> p.getRole()).collect(Collectors.toList()));
+        dto.setPerfil(Collections.singletonList(entity.getPerfil().getRole()));
         return dto;
     }
 
@@ -79,5 +88,26 @@ public class UsuarioService {
     public Usuario findById(Integer id) throws Excecao {
         return this.repository.findById(id)
             .orElseThrow(() -> new Excecao("Usuario com id " + id + " nao foi encontrado"));
+    }
+
+    public Page<UsuarioDTO> findAllAlunos(Integer page, Integer linesPerPage, String orderBy, String direction) {
+        PageRequest pageRequest = PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy);
+        return this.repository.findAllAlunos(pageRequest).map(u -> UsuarioService.convertEntityToDto(u));
+    }
+
+    public Page<UsuarioDTO> findAllProfessores(Integer page, Integer linesPerPage, String orderBy, String direction) {
+        PageRequest pageRequest = PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy);
+        return this.repository.findAllProfessores(pageRequest).map(u -> UsuarioService.convertEntityToDto(u));
+    }
+
+    public Page<ProvaRespondidaDTO> findAllResultadosByProfessores(Integer id, Integer page, Integer linesPerPage, String orderBy, String direction) throws Excecao {
+        Usuario professor = this.findById(id);
+        List<Prova> provas = professor.getProvas_criadas();
+        List<ProvaRespondida> provasRespondidas = new ArrayList<>();
+        for(Prova p: provas) {
+            provasRespondidas.addAll(provaRespondidaRepository.findALlByProva(p));
+        }
+
+        return new PageImpl<>(ProvaRespondidaService.convertEntityListToDtoList(provasRespondidas));
     }
 }
