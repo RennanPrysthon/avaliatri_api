@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "questoes")
+@CrossOrigin
 public class QuestaoController {
     private QuestaoService service;
     private ProvaService provaService;

@@ -21,6 +21,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path = "usuarios")
+@CrossOrigin
 public class UsuarioController {
     private UsuarioService service;
     private ProvaService provaService;

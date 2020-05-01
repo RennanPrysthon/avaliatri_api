@@ -28,6 +28,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping(path = "provas")
+@CrossOrigin
 public class ProvaController {
     private ProvaService service;
     private ProvaRepository provaRepository;
