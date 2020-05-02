@@ -51,7 +51,7 @@ public class ProvaController {
     @GetMapping("")
     public ResponseEntity<Page<ProvaDTO>> getAll(
             @RequestParam(value="page", defaultValue ="0") Integer page,
-            @RequestParam(value="linesPerPage", defaultValue ="4")Integer linesPerPage,
+            @RequestParam(value="linesPerPage", defaultValue ="5")Integer linesPerPage,
             @RequestParam(value="orderBy", defaultValue ="id")String orderBy,
             @RequestParam(value="direction", defaultValue = "DESC")String direction
     ) {

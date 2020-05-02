@@ -37,7 +37,7 @@ public class UsuarioController {
     @GetMapping("/alunos")
     public ResponseEntity<Page<UsuarioDTO>> getAllAlunos(
         @RequestParam(value="page", defaultValue ="0") Integer page,
-        @RequestParam(value="linesPerPage", defaultValue ="4")Integer linesPerPage,
+        @RequestParam(value="linesPerPage", defaultValue ="5")Integer linesPerPage,
         @RequestParam(value="orderBy", defaultValue ="id")String orderBy,
         @RequestParam(value="direction", defaultValue = "DESC")String direction
     ) {
@@ -49,7 +49,7 @@ public class UsuarioController {
     @GetMapping("/professores")
     public ResponseEntity<Page<UsuarioDTO>> getAllProfessores(
         @RequestParam(value="page", defaultValue ="0") Integer page,
-        @RequestParam(value="linesPerPage", defaultValue ="4")Integer linesPerPage,
+        @RequestParam(value="linesPerPage", defaultValue ="5")Integer linesPerPage,
         @RequestParam(value="orderBy", defaultValue ="id")String orderBy,
         @RequestParam(value="direction", defaultValue = "DESC")String direction
     ) {
@@ -62,7 +62,7 @@ public class UsuarioController {
     public ResponseEntity<Page<ProvaRespondidaDTO>> getAllResultadosByProfessores(
             @PathVariable("id") Integer id,
             @RequestParam(value="page", defaultValue ="0") Integer page,
-            @RequestParam(value="linesPerPage", defaultValue ="4")Integer linesPerPage,
+            @RequestParam(value="linesPerPage", defaultValue ="5")Integer linesPerPage,
             @RequestParam(value="orderBy", defaultValue ="id")String orderBy,
             @RequestParam(value="direction", defaultValue = "DESC")String direction
     ) throws Excecao {
