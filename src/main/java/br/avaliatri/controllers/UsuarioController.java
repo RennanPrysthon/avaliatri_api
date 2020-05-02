@@ -15,6 +15,7 @@ import br.avaliatri.utils.Utils;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -27,11 +28,13 @@ public class UsuarioController {
     private UsuarioService service;
     private ProvaService provaService;
     private ProvaRespondidaService provaRespondidaService;
+    private BCryptPasswordEncoder pe;
 
-    public UsuarioController(UsuarioService service, ProvaService provaService, ProvaRespondidaService provaRespondidaService) {
+    public UsuarioController(UsuarioService service, ProvaService provaService, ProvaRespondidaService provaRespondidaService, BCryptPasswordEncoder pe) {
         this.service = service;
         this.provaService = provaService;
         this.provaRespondidaService = provaRespondidaService;
+        this.pe = pe;
     }
 
     @GetMapping("/alunos")
@@ -141,9 +144,8 @@ public class UsuarioController {
 
         usuario.setUpdated_at(Utils.getInstancia().getDataAtual());
         usuario.setName(dto.getName());
-        usuario.setEmail(dto.getEmail());
 
-        usuario = this.service.save(usuario);
+        usuario = this.service.update(usuario);
         dto = UsuarioService.convertEntityToDto(usuario);
         return ResponseEntity.ok().body(dto);
     }
@@ -152,22 +154,22 @@ public class UsuarioController {
     public ResponseEntity<UsuarioDTO> updatePassword(@PathVariable("id") Integer id, @RequestBody UsuarioDTO dto) throws Excecao {
         Usuario usuario = this.service.findById(id);
 
-        usuario.setPassword(dto.getPassword());
+        usuario.setPassword(this.pe.encode(dto.getPassword()));
         usuario.setUpdated_at(Utils.getInstancia().getDataAtual());
 
-        usuario = this.service.save(usuario);
+        usuario = this.service.update(usuario);
         dto = UsuarioService.convertEntityToDto(usuario);
         return ResponseEntity.ok().body(dto);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<UsuarioDTO> deleteUser(@PathVariable("id") Integer id, @Valid @RequestBody UsuarioDTO dto) throws Excecao {
+    public ResponseEntity deleteUser(@PathVariable("id") Integer id) throws Excecao {
         Usuario usuario = this.service.findById(id);
 
         usuario.setIs_active(false);
         usuario.setDeleted_at(Utils.getInstancia().getDataAtual());
 
-        this.service.save(usuario);
+        this.service.delete(usuario);
         return ResponseEntity.noContent().build();
     }
 }

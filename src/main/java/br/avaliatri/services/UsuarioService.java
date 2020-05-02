@@ -114,4 +114,12 @@ public class UsuarioService {
 
         return new PageImpl<>(ProvaRespondidaService.convertEntityListToDtoList(provasRespondidas));
     }
+
+    public void delete(Usuario usuario) {
+        this.repository.delete(usuario);
+    }
+
+    public Usuario update(Usuario usuario) {
+        return this.repository.save(usuario);
+    }
 }
