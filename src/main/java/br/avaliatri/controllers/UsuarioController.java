@@ -5,6 +5,7 @@ import br.avaliatri.dtos.ProvaRespondidaDTO;
 import br.avaliatri.dtos.ResultadoDTO;
 import br.avaliatri.dtos.UsuarioDTO;
 import br.avaliatri.dtos.util.QuestaoRespondidaDTO;
+import br.avaliatri.enums.Perfil;
 import br.avaliatri.excecoes.Excecao;
 import br.avaliatri.models.Usuario;
 import br.avaliatri.services.ProvaRespondidaService;
@@ -114,14 +115,25 @@ public class UsuarioController {
     }
 
     @PostMapping("")
-    public ResponseEntity<UsuarioDTO> saveUser(@Valid @RequestBody UsuarioDTO dto) {
+    public ResponseEntity<UsuarioDTO> saveAluno(@Valid @RequestBody UsuarioDTO dto) {
         Usuario usuario = UsuarioService.convertDtoToEntity(dto);
-
+        usuario.setPerfil(Perfil.ALUNO);
         usuario = this.service.save(usuario);
 
         dto = UsuarioService.convertEntityToDto(usuario);
         return ResponseEntity.status(HttpStatus.CREATED).body(dto);
     }
+
+    @PostMapping("/professor")
+    public ResponseEntity<UsuarioDTO> saveProfessor(@Valid @RequestBody UsuarioDTO dto) {
+        Usuario usuario = UsuarioService.convertDtoToEntity(dto);
+        usuario.setPerfil(Perfil.PROFESSOR);
+        usuario = this.service.save(usuario);
+
+        dto = UsuarioService.convertEntityToDto(usuario);
+        return ResponseEntity.status(HttpStatus.CREATED).body(dto);
+    }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<UsuarioDTO> updateUser(@PathVariable("id") Integer id, @Valid @RequestBody UsuarioDTO dto) throws Excecao {
