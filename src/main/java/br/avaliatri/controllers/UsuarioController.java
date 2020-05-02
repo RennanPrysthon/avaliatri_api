@@ -136,12 +136,24 @@ public class UsuarioController {
 
 
     @PutMapping("/{id}")
-    public ResponseEntity<UsuarioDTO> updateUser(@PathVariable("id") Integer id, @Valid @RequestBody UsuarioDTO dto) throws Excecao {
+    public ResponseEntity<UsuarioDTO> updateUser(@PathVariable("id") Integer id, @RequestBody UsuarioDTO dto) throws Excecao {
+        Usuario usuario = this.service.findById(id);
+
+        usuario.setUpdated_at(Utils.getInstancia().getDataAtual());
+        usuario.setName(dto.getName());
+        usuario.setEmail(dto.getEmail());
+
+        usuario = this.service.save(usuario);
+        dto = UsuarioService.convertEntityToDto(usuario);
+        return ResponseEntity.ok().body(dto);
+    }
+
+    @PutMapping("/{id}/password")
+    public ResponseEntity<UsuarioDTO> updatePassword(@PathVariable("id") Integer id, @RequestBody UsuarioDTO dto) throws Excecao {
         Usuario usuario = this.service.findById(id);
 
         usuario.setPassword(dto.getPassword());
         usuario.setUpdated_at(Utils.getInstancia().getDataAtual());
-        usuario.setName(dto.getName());
 
         usuario = this.service.save(usuario);
         dto = UsuarioService.convertEntityToDto(usuario);

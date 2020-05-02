@@ -36,6 +36,7 @@ public class UsuarioService {
     public Usuario save(Usuario e) {
         e.setIs_active(true);
         e.setCreated_at(Utils.getInstancia().getDataAtual());
+        e.setPassword(this.pe.encode(e.getPassword()));
         return this.repository.save(e);
     }
 

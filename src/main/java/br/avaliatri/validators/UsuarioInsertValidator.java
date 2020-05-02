@@ -19,7 +19,11 @@ public class UsuarioInsertValidator implements ConstraintValidator<UsuarioInsert
 
         repository.findByEmail(dto.getEmail())
             .ifPresent(u -> {
-                list.put("email", "O email " + u.getEmail() + " ja esta configurado a uma conta cadastrada");
+                if(u.getIs_active()) {
+                    list.put("email", "O email " + u.getEmail() + " ja esta configurado a uma conta cadastrada");
+                } else {
+                    list.put("email", "O email " + u.getEmail() + " ja esta configurado a uma conta inativa. Solicite o ativamento.");
+                }
             });
 
         list.forEach((k, v) -> {
