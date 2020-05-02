@@ -57,7 +57,9 @@ public class UsuarioService {
         dto.setEmail(entity.getEmail());
         dto.setName(entity.getName());
         dto.setId(entity.getId());
-        dto.setQtd_provas_criadas(entity.getProvas_criadas().size() == 0?null:entity.getProvas_criadas().size());
+        if(entity.getProvas_criadas() != null) {
+            dto.setQtd_provas_criadas(entity.getProvas_criadas().size() == 0 ? null : entity.getProvas_criadas().size());
+        }
         dto.setPerfil(Collections.singletonList(entity.getPerfil().getRole()));
         return dto;
     }
