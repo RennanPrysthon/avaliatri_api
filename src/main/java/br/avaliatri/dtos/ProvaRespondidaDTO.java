@@ -19,4 +19,5 @@ public class ProvaRespondidaDTO {
     private Integer quantidade_questoes = 0;
     private String titulo;
     private ProvaDTO prova;
+    private String nome_usuario;
 }

@@ -67,6 +67,7 @@ public class ProvaRespondidaService {
         dto.setNota(provaRespondida.getNota());
         dto.setObservacao(provaRespondida.getObservacao());
         dto.setUsuario(provaRespondida.getUsuario().getId());
+        dto.setNome_usuario(provaRespondida.getUsuario().getName());
         dto.setRespondida_em(Utils.getInstancia().getDataFormatada(provaRespondida.getRespondida_em()));
         dto.setQuantidade_questoes(provaRespondida.getQtd_questoes());
         dto.setQuestoes_respondidas(provaRespondida
