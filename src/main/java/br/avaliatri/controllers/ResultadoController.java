@@ -1,14 +1,11 @@
 package br.avaliatri.controllers;
 
 import br.avaliatri.dtos.ProvaRespondidaDTO;
-import br.avaliatri.dtos.util.QuestaoRespondidaDTO;
 import br.avaliatri.excecoes.Excecao;
+import br.avaliatri.models.ProvaRespondida;
 import br.avaliatri.services.ProvaRespondidaService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "resultados")
@@ -24,8 +21,19 @@ public class ResultadoController {
     public ResponseEntity<ProvaRespondidaDTO> getResultadoById(
             @PathVariable("id") Integer id
     ) throws Excecao {
-        ProvaRespondidaDTO resultadoDTO = provaRespondidaService.getResultadoById(id);
-
+        ProvaRespondidaDTO resultadoDTO = provaRespondidaService.getResultadoDtoById(id);
         return ResponseEntity.ok().body(resultadoDTO);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ProvaRespondidaDTO> atualizarResultado(
+            @PathVariable("id") Integer id,
+            @RequestBody ProvaRespondidaDTO dto
+    ) throws Excecao {
+        ProvaRespondida provaRespondida = provaRespondidaService.getResultadoById(id);
+        provaRespondida.setObservacao(dto.getObservacao());
+        provaRespondida = this.provaRespondidaService.save(provaRespondida);
+        ProvaRespondidaDTO dtoRes = ProvaRespondidaService.convertEntityToDto(provaRespondida);
+        return ResponseEntity.ok().body(dtoRes);
     }
 }

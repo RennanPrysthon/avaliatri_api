@@ -43,10 +43,13 @@ public class ProvaRespondidaService {
         return resultadoDTO;
     }
 
-    public ProvaRespondidaDTO getResultadoById(Integer id_resultado) throws Excecao {
-        ProvaRespondida provaRespondida = this.repository.findById(id_resultado)
+    public ProvaRespondidaDTO getResultadoDtoById(Integer id_resultado) throws Excecao {
+        return convertEntityToDto(getResultadoById(id_resultado));
+    }
+
+    public ProvaRespondida getResultadoById(Integer id_resultado) throws Excecao {
+        return this.repository.findById(id_resultado)
                 .orElseThrow(() -> new Excecao("Resultado nao encontrado"));
-        return convertEntityToDto(provaRespondida);
     }
 
     public static List<ProvaRespondidaDTO> convertEntityListToDtoList(List<ProvaRespondida> entities) {
