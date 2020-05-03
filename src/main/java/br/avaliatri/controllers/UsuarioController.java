@@ -110,7 +110,7 @@ public class UsuarioController {
             @PathVariable("id") Integer id,
             @PathVariable("id_resultado") Integer id_resultado
     ) throws Excecao {
-        ProvaRespondidaDTO resultadoDTO = provaRespondidaService.getResultadoById(id_resultado);
+        ProvaRespondidaDTO resultadoDTO = provaRespondidaService.getResultadoDtoById(id_resultado);
         List<QuestaoRespondidaDTO> dtos = resultadoDTO.getQuestoes_respondidas();
 
         return ResponseEntity.ok().body(resultadoDTO);
