@@ -17,7 +17,7 @@ public class ProvaRespondida {
     @OneToMany
     private List<QuestaoRespondida> questoes;
     private Date respondida_em;
-    private String observacao;
+    private String observacao = "";
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "prova_id")
     private Prova prova;

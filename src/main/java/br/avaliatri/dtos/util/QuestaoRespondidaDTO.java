@@ -14,17 +14,11 @@ import java.util.List;
 public class QuestaoRespondidaDTO {
     @NotNull(message = "Insira o id da questao") private Integer questao;
     @NotNull(message = "Insira a alternativa") private String alternativa_usuario;
-    private List<AlternativaDTO> alternativas;
+    private String alternativaA;
+    private String alternativaB;
+    private String alternativaC;
+    private String alternativaD;
+    private String alternativaE;
     private Boolean is_correta;
     private String enunciado;
-
-    public QuestaoRespondidaDTO() {
-
-    }
-    public QuestaoRespondidaDTO(Integer id, String alternativa_usuario, List<Alternativa> alternativas, boolean is_correta) {
-        this.questao = id;
-        this.alternativa_usuario = alternativa_usuario;
-        this.alternativas = AlternativaService.convertEntityListToDtoList(alternativas);
-        this.is_correta = is_correta;
-    }
 }

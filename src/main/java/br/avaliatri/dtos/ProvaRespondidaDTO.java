@@ -13,7 +13,7 @@ public class ProvaRespondidaDTO {
     @NotNull(message = "Insira o id do usuario") private Integer usuario;
     private String respondida_em;
 
-    private String observacao;
+    private String observacao = "";
     private List<QuestaoRespondidaDTO> questoes_respondidas;
     private Integer nota;
     private Integer quantidade_questoes = 0;

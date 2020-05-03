@@ -79,7 +79,23 @@ public class ProvaRespondidaService {
                     qn.setAlternativa_usuario(q.getAlternativa_usuario());
                     qn.setIs_correta(q.getIs_correta());
                     qn.setQuestao(q.getQuestao().getId());
-                    qn.setAlternativas(AlternativaService.convertEntityListToDtoList(q.getQuestao().getAlternativas()));
+                    for(Alternativa a: q.getQuestao().getAlternativas()) {
+                        if(a.getOpcao().equals("A")){
+                            qn.setAlternativaA(a.getTexto());
+                        }
+                        if(a.getOpcao().equals("B")){
+                            qn.setAlternativaB(a.getTexto());
+                        }
+                        if(a.getOpcao().equals("C")){
+                            qn.setAlternativaC(a.getTexto());
+                        }
+                        if(a.getOpcao().equals("D")){
+                            qn.setAlternativaD(a.getTexto());
+                        }
+                        if(a.getOpcao().equals("E")){
+                            qn.setAlternativaE(a.getTexto());
+                        }
+                    }
                     return qn;
                 }).collect(Collectors.toList()));
         return dto;

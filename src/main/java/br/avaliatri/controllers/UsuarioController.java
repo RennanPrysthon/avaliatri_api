@@ -106,15 +106,14 @@ public class UsuarioController {
     }
 
     @GetMapping("/{id}/resultados/{id_resultado}")
-    public ResponseEntity<List<QuestaoRespondidaDTO>> getResultadoById(
+    public ResponseEntity<ProvaRespondidaDTO> getResultadoById(
             @PathVariable("id") Integer id,
             @PathVariable("id_resultado") Integer id_resultado
     ) throws Excecao {
-        Usuario entitiy = this.service.findById(id);
         ProvaRespondidaDTO resultadoDTO = provaRespondidaService.getResultadoById(id_resultado);
         List<QuestaoRespondidaDTO> dtos = resultadoDTO.getQuestoes_respondidas();
 
-        return ResponseEntity.ok().body(dtos);
+        return ResponseEntity.ok().body(resultadoDTO);
     }
 
     @PostMapping("")
