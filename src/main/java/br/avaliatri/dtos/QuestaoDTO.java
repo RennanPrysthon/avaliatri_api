@@ -21,7 +21,7 @@ public class QuestaoDTO implements Serializable {
     private List<AlternativaDTO> alternativas;
     @NotEmpty(message = "Enunciado obrigatorio") private String enunciado;
 
-    @JsonIgnore private String alternativa_correta = "A";
+    private String alternativa_correta = "A";
     private String alternativaA;
     private String alternativaB;
     private String alternativaC;
