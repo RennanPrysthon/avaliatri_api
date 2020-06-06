@@ -1,5 +1,8 @@
 package br.avaliatri;
 
+import br.avaliatri.enums.Perfil;
+import br.avaliatri.models.Usuario;
+import br.avaliatri.repositories.UsuarioRepository;
 import br.avaliatri.services.DatabaseInstantiate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -8,6 +11,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.core.env.Environment;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,6 +33,10 @@ public class AvaliatriApplication extends SpringBootServletInitializer implement
 	private Environment env;
 	@Autowired
 	private DatabaseInstantiate db;
+	@Autowired
+	private UsuarioRepository usuarioRepository;
+	@Autowired
+	private BCryptPasswordEncoder pe;
 	@Override
 	public void run(String... args) throws Exception {
 		logger.log(Level.INFO, "Iniciando projeto " + env.getProperty("app.name") + " no profile: " + env.getProperty("spring.profiles.active"));

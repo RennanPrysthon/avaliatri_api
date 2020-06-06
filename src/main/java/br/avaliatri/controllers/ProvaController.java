@@ -16,15 +16,13 @@ import lombok.Synchronized;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping(path = "provas")
@@ -72,12 +70,8 @@ public class ProvaController {
     @PostMapping("")
     public ResponseEntity<ProvaDTO> save(@Valid @RequestBody ProvaDTO dto, BindingResult result) throws Exception {
         verifyErrors(result);
-        List<Questao> questoes;
         Prova p = ProvaService.convertDtoToEntity(dto);
 
-        questoes = QuestaoService.convertDtoListToEntityList(dto.getQuestoes());
-
-        p.setQuestoes(questoes);
         p = this.service.save(p);
 
         dto = ProvaService.convertEntityToDto(p);
@@ -86,7 +80,7 @@ public class ProvaController {
     }
 
     @PostMapping("/{id}/questao")
-    public ResponseEntity<ProvaDTO> addQuestaoToProva(
+    public ResponseEntity<QuestaoDTO> addQuestaoToProva(
             @PathVariable("id") Integer id,
             @Valid @RequestBody QuestaoDTO dto,
             BindingResult result
@@ -99,9 +93,27 @@ public class ProvaController {
 
         Questao q = QuestaoService.convertDtoToEntity(dto);
         q.setTemImagem(false);
-        p = this.service.addQuestao(p, q);
+        q.addProva(p);
+        this.service.addQuestao(p, q);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(ProvaService.convertEntityToDto(p));
+        return ResponseEntity.status(HttpStatus.CREATED).body(QuestaoService.convertEntityToDto(q));
+    }
+
+    @DeleteMapping("/{id}/questao/{questao_id}")
+    public ResponseEntity removeQuestaoFromProva(
+            @PathVariable("id") Integer id,
+            @PathVariable("questao_id") Integer questao_id
+    ) throws Exception {
+        Prova prova = this.service.findById(id);
+
+        Questao questao = this.questaoRepository.findById(questao_id)
+            .orElseThrow(()-> new Excecao("Questao com id " + questao_id + " nao foi encontrada", HttpStatus.NOT_FOUND));
+
+        prova.removeQuestao(questao);
+
+        this.service.save(prova);
+
+        return ResponseEntity.noContent().build();
     }
 
     @Synchronized
@@ -118,7 +130,7 @@ public class ProvaController {
         this.provaRespondidaService.verificarSeExisteResultado(id, dto.getUsuario());
 
         List<QuestaoRespondidaDTO> questaoRespondidaDTOS;
-        List<Questao> questoes;
+        Set<Questao> questoes;
         List<QuestaoRespondida> resultado = new ArrayList<>();
 
         Map<Integer, Boolean> respostas = new HashMap<Integer, Boolean>();
@@ -200,6 +212,15 @@ public class ProvaController {
         p.setTitle(dto.getTitle());
         p.setDescription(dto.getDescription());
         p.setUpdated_at(Utils.getInstancia().getDataAtual());
+        List<Questao> questaos = new ArrayList<>();
+        Optional<Questao> questao;
+        for(Integer id_questao: dto.getQuestoes_adicionadas()) {
+            questao = this.questaoRepository.findById(id_questao);
+            if(questao.isPresent()) {
+                p.addQuestao(questao.get());
+                questao.get().getProvas().add(p);
+            }
+        }
 
         p = this.service.update(p);
 
@@ -212,20 +233,11 @@ public class ProvaController {
     public ResponseEntity<ProvaDTO> delete(@PathVariable("id") Integer id) throws Exception {
         Prova prova = this.service.findById(id);
 
-        if(!prova.getIs_activated()) throw new Excecao("Prova com id " + id + " ja foi excluida");
-
-        prova.setDeleted_at(Utils.getInstancia().getDataAtual());
-        prova.setIs_activated(false);
-        prova.setTitle(prova.getTitle() + " [DESATIVADA]");
-
-        prova = this.service.update(prova);
-
-        /*
-             TODO: Criar ImagemService para tratamento de arquivos
-             ImagemService.excluirImagensAssociadas(prova);
-         */
-
         if(!prova.getIs_published()) {
+            Set<Questao> questaos = prova.getQuestoes();
+            for(Questao q: questaos) {
+                q.removeProva(prova);
+            }
             this.service.delete(prova);
             return ResponseEntity.noContent().build();
         }

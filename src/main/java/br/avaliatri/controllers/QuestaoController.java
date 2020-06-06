@@ -8,6 +8,9 @@ import br.avaliatri.services.AlternativaService;
 import br.avaliatri.services.ProvaService;
 import br.avaliatri.services.QuestaoService;
 import br.avaliatri.utils.Utils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,13 +28,36 @@ public class QuestaoController {
         this.alternativaService = alternativaService;
     }
 
+    @GetMapping()
+    public ResponseEntity<Page<Questao>> findAll(
+        @RequestParam(value="page", defaultValue ="0") Integer page,
+        @RequestParam(value="linesPerPage", defaultValue ="4")Integer linesPerPage,
+        @RequestParam(value="orderBy", defaultValue ="id")String orderBy,
+        @RequestParam(value="direction", defaultValue = "DESC")String direction
+    ) {
+        PageRequest pageRequest = PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy);
+        Page<Questao> questaos = this.service.findAll(pageRequest);
+        return ResponseEntity.ok().body(questaos);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<QuestaoDTO> findById(@PathVariable("id") Integer id) throws Excecao {
+        Questao questao = this.service.findById(id);
+        return ResponseEntity.ok().body(QuestaoService.convertEntityToDto(questao));
+    }
+
+    @PostMapping
+    public ResponseEntity<QuestaoDTO> save(@RequestBody QuestaoDTO questaoDTO) {
+
+        Questao questao = QuestaoService.convertDtoToEntity(questaoDTO);
+        questao = this.service.save(questao);
+
+        return ResponseEntity.ok().body(QuestaoService.convertEntityToDto(questao));
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity delete(@PathVariable("id") Integer id) throws Excecao {
         Questao questao = service.findById(id);
-
-        if(questao.getProva().getIs_published()) {
-            throw new Excecao("Prova que contem a questao com id " + id + " esta publicada, por isso nao pode ser excluida");
-        }
 
         this.service.delete(questao);
 
@@ -39,15 +65,11 @@ public class QuestaoController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<QuestaoDTO> editQuestao(
+    public ResponseEntity<Questao> editQuestao(
             @PathVariable("id") Integer id,
             @RequestBody QuestaoDTO dtoNew
     ) throws Excecao {
         Questao questao = service.findById(id);
-
-        if(questao.getProva().getIs_published()) {
-            throw new Excecao("Prova que contem a questao com id " + id + " esta publicada, por isso nao pode ser alterada");
-        }
 
         for (Alternativa a: questao.getAlternativas()) {
             if(a.getOpcao().equalsIgnoreCase("A")){
@@ -70,11 +92,9 @@ public class QuestaoController {
         questao.setEnunciado(dtoNew.getEnunciado());
         questao.setAlternativa_correta(dtoNew.getAlternativa_correta());
         questao.setUpdated_at(Utils.getInstancia().getDataAtual());
-
+        questao.setTextoApoio(dtoNew.getTextoApoio());
         questao = service.update(questao);
-
-        QuestaoDTO questaoDTO = QuestaoService.convertEntityToDto(questao);
-        return ResponseEntity.ok().body(questaoDTO);
+        return ResponseEntity.ok().body(questao);
     }
 
 }

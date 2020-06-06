@@ -1,8 +1,10 @@
 package br.avaliatri.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import java.util.List;
@@ -19,11 +21,13 @@ public class QuestaoRespondida {
     private String alternativa_usuario;
     private Boolean is_correta;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(
+        fetch = FetchType.LAZY
+    )
     @JoinColumn(name = "questao_id")
     private Questao questao;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "prova_respondida_id")
     private ProvaRespondida provaRespondida;
 

@@ -1,5 +1,6 @@
 package br.avaliatri.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -18,8 +19,10 @@ public class Imagem {
     private String nomeArquivo;
     private String extensao;
     @OneToMany(mappedBy = "imagem", fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Questao> questoes = new ArrayList<>();
     @OneToMany(mappedBy = "imagem", fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Alternativa> alternativa = new ArrayList<>();
 
     public Imagem(String caminho_arquivo, String nomeSemExtensao, String extensao) {

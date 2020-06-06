@@ -26,6 +26,7 @@ public class Usuario implements UserDetails {
     private Date deleted_at;
     private Boolean is_active = true;
     @OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @JsonIgnore
     private List<Prova> provas_criadas;
     @OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<ProvaRespondida> provas_respondidas;

@@ -10,12 +10,11 @@ import br.avaliatri.repositories.ProvaRepository;
 import br.avaliatri.repositories.QuestaoRepository;
 import br.avaliatri.repositories.UsuarioRepository;
 import br.avaliatri.utils.Utils;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.LongStream;
@@ -29,7 +28,7 @@ public class DatabaseInstantiate {
     private ProvaRepository provaRepository;
     private QuestaoRepository questaoRepository;
     private AlternativaRepository alternativaRepository;
-
+    private static final String POSICOES = "ABCDE";
     public DatabaseInstantiate(BCryptPasswordEncoder pe, UsuarioRepository usuarioRepository, ProvaRepository provaRepository, QuestaoRepository questaoRepository, AlternativaRepository alternativaRepository) {
         this.pe = pe;
         this.usuarioRepository = usuarioRepository;
@@ -39,89 +38,45 @@ public class DatabaseInstantiate {
     }
 
     public void init() {
+        this.alternativaRepository.deleteAll();
+        this.provaRepository.deleteAll();
+        this.questaoRepository.deleteAll();
+        this.usuarioRepository.deleteAll();
         logger.log(Level.INFO, "Instanciando base generica");
+
         Usuario usuario = new Usuario();
+        usuario.setPerfil(Perfil.PROFESSOR);
         usuario.setName("Rennan Prysthon");
-        usuario.setEmail("admin");
-        usuario.setPassword(pe.encode("admin"));
-        usuario.setCreated_at(
-                Utils.getInstancia().getDataAtual()
-        );
-        usuario.addPerfil(Perfil.PROFESSOR);
+        usuario.setPassword(pe.encode("1234"));
+        usuario.setEmail("rennandelcastillo@gmail.com");
         usuario = this.usuarioRepository.save(usuario);
-        logger.log(Level.INFO, "Usuario " + usuario.getName() + " adicionado");
 
-        LongStream.range(1, 5)
-                .mapToObj(i -> {
-                    Usuario u = new Usuario();
-                    u.setName("Aluno " + i);
-                    u.setEmail("aluno"+i+"@email.com");
-                    u.setPassword(pe.encode("1234"));
-                    u.addPerfil(Perfil.ALUNO);
-                    u.setCreated_at(Utils.getInstancia().getDataAtual());
-                    u.setIs_active(true);
-                    return u;
-                })
-                .map(v -> usuarioRepository.save(v))
-                .forEach(u -> logger.log(Level.INFO, "Usuario: [ "+u.getName()+" ] criado"));
+        Questao questao = new Questao();
+        questao.setEnunciado("Enunciado da questao 1");
+        questao.setTextoApoio("Acao da questao 1");
+        questao.setAlternativas(getAlternativas());
+        questao.setAlternativa_correta("A");
+        questao = this.questaoRepository.saveAndFlush(questao);
 
-
-        Usuario finalUsuario = usuario;
-        LongStream.range(1, 5)
-                .mapToObj(i -> {
-                    Prova p = new Prova();
-                    p.setTitle("Prova " + i);
-                    p.setUsuario(finalUsuario);
-                    p.setCreated_at(Utils.getInstancia().getDataAtual());
-                    p.setDescription("Descricao da prova " + i);
-                    p.setIs_activated(true);
-                    p.setIs_published(true);
-                    p = provaRepository.save(p);
-                    p.setQuestoes(adicionarQuestoes(i,p));
-                    return p;
-                })
-                .forEach(p -> logger.log(Level.INFO, "Prova " + p.getTitle() + " adicionada"));
+        Prova prova = new Prova();
+        prova.setTitle("Prova teste");
+        prova.setDescription("Descriçao da prova");
+        prova.setUsuario(usuario);
+        prova.addQuestao(questao);
+        this.provaRepository.save(prova);
     }
 
-
-    private List<Questao> adicionarQuestoes(Long c, Prova p) {
-        List<Questao> questoes = new ArrayList<>();
-        Questao questao;
-        for (int i = 1; i < 4; i++) {
-            questao = new Questao();
-            questao.setEnunciado("Questao " + i + " da prova " + p.getTitle());
-            questao.setAlternativas(Arrays.asList(
-                    new Alternativa("A", "Alternativa da questao " + questao.getEnunciado()),
-                    new Alternativa("B", "Alternativa da questao " + questao.getEnunciado()),
-                    new Alternativa("C", "Alternativa da questao " + questao.getEnunciado()),
-                    new Alternativa("D", "Alternativa da questao " + questao.getEnunciado()),
-                    new Alternativa("E", "Alternativa da questao " + questao.getEnunciado())
-            ));
-            questao.setCreated_at(Utils.getInstancia().getDataAtual());
-            questao.setProva(p);
-            questao.setAlternativa_correta("A");
-            questao = questaoRepository.save(questao);
-            questao.setAlternativas(adicinarAlternativas(i, questao));
-            questao.setTemImagem(false);
-            questoes.add(questao);
-        }
-        questaoRepository.saveAll(questoes);
-        return questoes;
-    }
-
-    private List<Alternativa> adicinarAlternativas(int c, Questao q) {
-        String opcoes = "ABCDE";
+    public List<Alternativa> getAlternativas() {
         List<Alternativa> alternativas = new ArrayList<>();
-        Alternativa a;
+        Alternativa alternativa;
         for(int i = 0; i < 5; i++) {
-            a = new Alternativa();
-            a.setTexto("Alternativa " + (i+1) + " da questao " + c);
-            a.setOpcao(String.valueOf(opcoes.charAt(i)));
-            a.setQuestao(q);
-            a.setTemImagem(false);
-            alternativas.add(a);
+            alternativa = new Alternativa();
+            alternativa.setTemImagem(false);
+            alternativa.setTexto("Texto " + i);
+            alternativa.setOpcao(String.valueOf(POSICOES.charAt(i)));
+            alternativas.add(alternativa);
         }
-        alternativaRepository.saveAll(alternativas);
+
         return alternativas;
     }
 }

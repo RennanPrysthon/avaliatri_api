@@ -57,7 +57,7 @@ public class UploadController {
            this.service.deletarImagem(questao.getImagem());
         }
 
-        Img img = this.service.gerarImagem(file, questao.getProva().getId(), questao_id);
+        Img img = this.service.gerarImagem(file, questao_id);
 
         String caminhoImagem = this.service.store(img);
         CaminhoImagem res = new CaminhoImagem(caminhoImagem);
@@ -93,7 +93,7 @@ public class UploadController {
             this.service.deletarImagem(alternativa.getImagem());
         }
 
-        Img img = this.service.gerarImagem(file, alternativa.getQuestao().getProva().getId(), alternativa.getQuestao().getId(), alternativa_id);
+        Img img = this.service.gerarImagem(file, alternativa.getQuestao().getId(), alternativa_id);
 
         String caminhoImagem = this.service.store(img);
         CaminhoImagem res = new CaminhoImagem(caminhoImagem);

@@ -38,11 +38,11 @@ public class ProvaService {
                 .orElseThrow(()->new Excecao(Collections.singletonList("Usuario nao encontrado")));
 
         List<Alternativa> alternativas;
-        List<Questao> questaos = p.getQuestoes();
-        p.setQuestoes(new ArrayList<>());
+        Set<Questao> questaos = p.getQuestoes();
+        p.setQuestoes(new HashSet<>());
         p = this.repository.saveAndFlush(p);
         for(Questao q: questaos){
-            q.setProva(p);
+            q.getProvas().add(p);
 
             alternativas = q.getAlternativas();
             q.setAlternativas(new ArrayList<>());
@@ -79,6 +79,7 @@ public class ProvaService {
             provaDTO.setTitle(prova.getTitle());
             provaDTO.setCreated_at(Utils.getInstancia().getDataFormatada(prova.getCreated_at()));
             provaDTO.setIs_activated(prova.getIs_activated());
+            provaDTO.setIs_published(prova.getIs_published());
             provaDTO.setCriado_por(prova.getUsuario().getName());
             provaDTO.setQtd_questoes(prova.getQuestoes().size());
             return provaDTO;
@@ -151,17 +152,14 @@ public class ProvaService {
     @Transactional
     public Prova addQuestao(Prova p, Questao q) {
         List<Alternativa> alternativas;
-        q.setProva(p);
-
         alternativas = q.getAlternativas();
-
         for(Alternativa a: alternativas) {
             a.setQuestao(q);
         }
         q.setCreated_at(Utils.getInstancia().getDataAtual());
         q.setAlternativas(alternativas);
         q = this.questaoRepository.save(q);
-        p.getQuestoes().add(q);
+        p.addQuestao(q);
         p.setUpdated_at(Utils.getInstancia().getDataAtual());
         p = this.repository.save(p);
         this.alternativaRepository.saveAll(q.getAlternativas());
@@ -171,7 +169,7 @@ public class ProvaService {
     public Page<ProvaDTO> findAllForUser(Usuario entitiy, Integer page, Integer linesPerPage, String orderBy, String direction) {
         PageRequest pageRequest = PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy);
 
-        return this.repository.findAll(pageRequest).map(p -> {
+        return this.repository.findAllUser(pageRequest).map(p -> {
             Optional<ProvaRespondida> provaRespondida = this.respondidaRepository.findByUsuarioAndProva(entitiy, p);
             ProvaDTO provaDTO = new ProvaDTO();
             provaDTO.setId(p.getId());
@@ -179,7 +177,6 @@ public class ProvaService {
             provaDTO.setCreated_at(Utils.getInstancia().getDataFormatada(p.getCreated_at()));
             provaDTO.setDescription(p.getDescription());
             provaDTO.setQtd_questoes(p.getQuestoes().size());
-
             if(provaRespondida.isPresent()) {
                 provaDTO.setPontuacao(provaRespondida.get().getNota());
                 provaDTO.setResultado_id(provaRespondida.get().getId());

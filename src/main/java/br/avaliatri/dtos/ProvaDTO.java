@@ -1,9 +1,8 @@
 package br.avaliatri.dtos;
 
-import br.avaliatri.dtos.util.QuestaoRespondidaDTO;
 import br.avaliatri.enums.StatusProva;
 import br.avaliatri.validators.ProvaInsert;
-import br.avaliatri.validators.QuestaoInsert;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
@@ -29,4 +28,5 @@ public class ProvaDTO {
     private String deleted_at;
     private Boolean is_published;
     private Boolean is_activated;
+    private List<Integer> questoes_adicionadas = new ArrayList<>();
 }

@@ -1,40 +1,57 @@
 package br.avaliatri.services;
 
-import br.avaliatri.dtos.AlternativaDTO;
 import br.avaliatri.dtos.QuestaoDTO;
 import br.avaliatri.excecoes.Excecao;
-import br.avaliatri.models.Alternativa;
-import br.avaliatri.models.Prova;
-import br.avaliatri.models.Questao;
+import br.avaliatri.models.*;
+import br.avaliatri.repositories.AlternativaRepository;
+import br.avaliatri.repositories.ProvaRepository;
 import br.avaliatri.repositories.QuestaoRepository;
-import br.avaliatri.repositories.UsuarioRepository;
+import br.avaliatri.repositories.QuestaoRespondidaRepository;
+import lombok.Synchronized;
+import org.hibernate.annotations.Synchronize;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class QuestaoService {
 
     private QuestaoRepository repository;
-    private UsuarioRepository usuarioRepository;
+    private ProvaRepository provaRepository;
+    private QuestaoRespondidaRepository questaoRespondidaRepository;
+    private AlternativaRepository alternativaRepository;
 
-    public QuestaoService(QuestaoRepository repository, UsuarioRepository usuarioRepository) {
+    public QuestaoService(QuestaoRepository repository, ProvaRepository provaRepository, QuestaoRespondidaRepository questaoRespondidaRepository, AlternativaRepository alternativaRepository) {
         this.repository = repository;
-        this.usuarioRepository = usuarioRepository;
+        this.provaRepository = provaRepository;
+        this.questaoRespondidaRepository = questaoRespondidaRepository;
+        this.alternativaRepository = alternativaRepository;
     }
 
+    @Transactional
     public Questao save(Questao e) {
+        for(Alternativa a: e.getAlternativas()) {
+            a.setQuestao(e);
+        }
+        this.alternativaRepository.saveAll(e.getAlternativas());
         return this.repository.save(e);
+    }
+
+    public Page<Questao> findAll(PageRequest pageRequest) {
+        return this.repository.findAll(pageRequest);
     }
 
     public static Questao convertDtoToEntity(QuestaoDTO dto) {
         Questao entity = new Questao();
         List<Alternativa> alternativas = new ArrayList<>();
-        entity.setProva(new Prova());
-        entity.getProva().setId(dto.getProva());
         entity.setAlternativa_correta(dto.getAlternativa_correta());
         entity.setEnunciado(dto.getEnunciado());
+        entity.setTextoApoio(dto.getTextoApoio());
         Alternativa a;
 
         a = new Alternativa("A", dto.getAlternativaA());
@@ -57,11 +74,12 @@ public class QuestaoService {
         dto.setAlternativa_correta(entity.getAlternativa_correta());
         dto.setEnunciado(entity.getEnunciado());
         dto.setId(entity.getId());
-        dto.setProva(entity.getProva().getId());
         if(entity.getTemImagem()) {
             dto.setImagem(entity.getImagem().getCaminhoArquivo());
         }
+        dto.setTextoApoio(entity.getTextoApoio());
         dto.setTemImagem(entity.getTemImagem());
+        dto.setAlternativas(AlternativaService.convertEntityListToDtoList(entity.getAlternativas()));
         String alternativaValor;
         for(Alternativa a: entity.getAlternativas()) {
             if(a.getOpcao().equalsIgnoreCase("A")){
@@ -92,7 +110,7 @@ public class QuestaoService {
         return this.repository.saveAll(questoes);
     }
 
-    public static List<QuestaoDTO> convertEntityListToDtoList(List<Questao> entities) {
+    public static List<QuestaoDTO> convertEntityListToDtoList(Set<Questao> entities) {
         List<QuestaoDTO> dtos = new ArrayList<>();
         for(Questao e: entities) {
             dtos.add(convertEntityToDto(e));
@@ -131,6 +149,15 @@ public class QuestaoService {
     }
 
     public void delete(Questao questao) {
+        Set<Prova> provas = questao.getProvas();
+        for(Prova prova: provas) {
+            prova.removeQuestao(questao);
+            this.delete(questao);
+        }
+        List<QuestaoRespondida> respondidas = questao.getQuestaoesRespondidas();
+        for(QuestaoRespondida questaoRespondida: respondidas) {
+            this.questaoRespondidaRepository.delete(questaoRespondida);
+        }
         this.repository.delete(questao);
     }
 }

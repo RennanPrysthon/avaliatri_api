@@ -31,17 +31,6 @@ public class ImagemService {
         if(!EXTENSOES_VALIDAS.contains(img.getExtensao().toLowerCase())) {
             throw new Excecao("Formato de arquivo " + img.getExtensao() + " não é valido");
         }
-
-        try {
-            BufferedImage image = ImageIO.read(img.getArquivo());
-            BufferedImage new_img = this.redimensionarImagem(image, size);
-
-            ImageIO.write(new_img, img.getExtensao(), new File(dir + img.getPastaImagem()));
-
-            log.log(Level.INFO, "Upload da imagem concluido no diretorio: " + img.getPastaImagem());
-        } catch (IOException e) {
-            throw new Excecao("Upload do arquivo não pode ser concluido");
-        }
         return img.getPastaImagem();
     }
 
@@ -68,12 +57,12 @@ public class ImagemService {
                 .toLowerCase();
     }
 
-    public Img gerarImagem(MultipartFile file, Integer prova_id, Integer questao_id) throws Excecao {
-        return this.retornoImg(file, "prova_" + prova_id + "-" + "questao_"+questao_id + "--" + System.currentTimeMillis());
+    public Img gerarImagem(MultipartFile file, Integer questao_id) throws Excecao {
+        return this.retornoImg(file,  "questao_"+questao_id + "--" + System.currentTimeMillis());
     }
 
-    public Img gerarImagem(MultipartFile file, Integer prova_id, Integer questao_id, Integer alternativa_id) throws Excecao {
-        return this.retornoImg(file, "prova_" + prova_id + "-"+ "questao_"+questao_id + "-" + "alternativa" + alternativa_id + "--" + System.currentTimeMillis());
+    public Img gerarImagem(MultipartFile file, Integer questao_id, Integer alternativa_id) throws Excecao {
+        return this.retornoImg(file,  "questao_"+questao_id + "-" + "alternativa_" + alternativa_id + "--" + System.currentTimeMillis());
     }
 
     public Img retornoImg(MultipartFile file, String path) throws Excecao {

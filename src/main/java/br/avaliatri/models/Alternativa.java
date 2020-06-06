@@ -1,5 +1,6 @@
 package br.avaliatri.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,13 +14,14 @@ public class Alternativa {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "imagem_id")
     private Imagem imagem;
-    private Boolean temImagem;
+    private Boolean temImagem = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "questao_id")
+    @JsonIgnore
     private Questao questao;
     private String opcao;
     private String texto;
